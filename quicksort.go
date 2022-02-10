@@ -1,8 +1,11 @@
 package main
 
 func partition(nums []int, lo, hi int) int {
-	pivot := nums[(hi+lo)/2]
-	i, j := lo-1, hi+1
+	var (
+		pivot = nums[(hi+lo)/2]
+		i     = lo - 1
+		j     = hi + 1
+	)
 
 	for {
 		for i++; nums[i] < pivot; i++ {

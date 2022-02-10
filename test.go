@@ -27,17 +27,18 @@ func init() {
 	for _, l := range CASE_LEN {
 		wg.Add(1)
 		go func(l int) {
+			var (
+				sorted = make([]int, l)
+				nums   = func() []int {
+					nums := make([]int, 0, l)
+					for i := 0; i < l; i++ {
+						nums = append(nums, rand.Intn(l)-l/2)
+					}
+					return nums
+				}()
+			)
+
 			defer wg.Done()
-
-			nums := func() []int {
-				nums := make([]int, 0, l)
-				for i := 0; i < l; i++ {
-					nums = append(nums, rand.Intn(l)-l/2)
-				}
-				return nums
-			}()
-			sorted := make([]int, l)
-
 			copy(sorted, nums)
 			sort.Slice(sorted, func(i, j int) bool { return sorted[i] < sorted[j] })
 
@@ -47,7 +48,9 @@ func init() {
 			mu.Unlock()
 		}(l)
 	}
+
 	wg.Wait()
+
 	sort.Slice(testCases, func(i, j int) bool {
 		return len(testCases[i].nums) < len(testCases[j].nums)
 	})
@@ -58,16 +61,20 @@ func init() {
 
 func testSorting(t *testing.T, f func([]int) []int) {
 	for _, tc := range testCases {
-		nums := make([]int, len(tc.nums))
-		sorted := tc.sorted
+		var (
+			nums   = make([]int, len(tc.nums))
+			sorted = tc.sorted
+		)
 
 		copy(nums, tc.nums)
 
 		t.Run(fmt.Sprintf("%d", len(nums)), func(t *testing.T) {
-			// t.Parallel()
+			var (
+				expected = sorted
+				received = f(nums)
+			)
 
-			expected := sorted
-			received := f(nums)
+			t.Parallel()
 
 			if len(expected) != len(received) {
 				t.Errorf("array length modified; expected: %d, received: %d", len(expected), len(received))

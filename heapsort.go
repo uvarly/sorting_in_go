@@ -1,9 +1,11 @@
 package main
 
 func heapify(nums []int, i int) {
-	largestIdx := i
-	leftIdx := 2*i + 1
-	rightIdx := 2*i + 2
+	var (
+		largestIdx = i
+		leftIdx    = 2*i + 1
+		rightIdx   = 2*i + 2
+	)
 
 	if leftIdx < len(nums) && nums[leftIdx] > nums[largestIdx] {
 		largestIdx = leftIdx
