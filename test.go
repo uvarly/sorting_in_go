@@ -26,6 +26,7 @@ func init() {
 
 	for _, l := range CASE_LEN {
 		wg.Add(1)
+
 		go func(l int) {
 			var (
 				sorted = make([]int, l)
@@ -39,6 +40,7 @@ func init() {
 			)
 
 			defer wg.Done()
+
 			copy(sorted, nums)
 			sort.Slice(sorted, func(i, j int) bool { return sorted[i] < sorted[j] })
 
@@ -93,6 +95,10 @@ func testSorting(t *testing.T, f func([]int) []int) {
 
 func benchmarkSorting(b *testing.B, f func([]int) []int) {
 	for _, bc := range benchmarkCases {
+		if len(bc.nums) < 10 {
+			continue
+		}
+
 		nums := make([]int, len(bc.nums))
 
 		copy(nums, bc.nums)

@@ -23,16 +23,22 @@ func partition(nums []int, lo, hi int) int {
 }
 
 func _quicksort(nums []int, lo, hi int) []int {
-	if lo < hi {
-		pivot := partition(nums, lo, hi)
-
-		_quicksort(nums, lo, pivot)
-		_quicksort(nums, pivot+1, hi)
+	if lo >= hi {
+		return nums
 	}
+
+	pivotIdx := partition(nums, lo, hi)
+
+	_quicksort(nums, lo, pivotIdx)
+	_quicksort(nums, pivotIdx+1, hi)
 
 	return nums
 }
 
 func quicksort(nums []int) []int {
+	if len(nums) < 2 {
+		return nums
+	}
+
 	return _quicksort(nums, 0, len(nums)-1)
 }
